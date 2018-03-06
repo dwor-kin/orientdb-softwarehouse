@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block stylesheets %}
+            <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
+            <!-- Latest compiled and minified CSS -->
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+            <!-- Optional theme -->
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        {% endblock %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    </head>
+    <body>
+        {% block javascripts %}
+            <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+            <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+            <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+
+            <script>
+                function loadPage(url) {
+                    document.location.href = url;
+                }
+            </script>
+        {% endblock %}
+
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <ul class="nav nav-tabs">
+                            <li data-toggle="dropdown">
+                                <a href="#" data-toggle="dropdown" class="dropdown-toggle">Manage elements<strong class="caret"></strong></a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="#" onclick="loadPage('{{ url("person:get-list")}}')">List persons</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li data-toggle="dropdown">
+                                <a href="#" data-toggle="dropdown" class="dropdown-toggle">Add link<strong class="caret"></strong></a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="#" onclick="loadPage('{{ url("project:get-projects")}}')">Assign to project</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Lead people</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li data-toggle="dropdown">
+                                <a href="#" data-toggle="dropdown" class="dropdown-toggle">Get report<strong class="caret"></strong></a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="#" onclick="loadPage('{{ url("report:unemployed")}}')">Show unemployment</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" onclick="loadPage('{{ url("report:leading-by")}}')">Show leading by</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" onclick="loadPage('{{ url("report:assign-to-project")}}')">Show assign to project</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" onclick="loadPage('{{ url("report:lead-by-head")}}')">Show leading by head</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" onclick="loadPage('{{ url("report:people-by-technology")}}')">Show by technology</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" onclick="loadPage('{{ url("report:people-in-all-projects")}}')">Show all people assigned to projects</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <div class="jumbotron">
+                            {% block body %}{% endblock %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </body>
+</html>

@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div id="wrapper">
+        <div id="container">
+            <p class="color-red">People by technology</p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="sel1">Select technology</label>
+        <form action="{{ url('report:people-by-technology') }}" method="post">
+            <select class="form-control" name="rid">
+                {% for technology in technologies %}
+                    <option value="{{ technology.oData.rid }}" {% if selected == technology.oData.rid %} selected {% endif %}>{{ technology.oData.type }}</option>
+                {% endfor %}
+            </select><button class="btn btn-primary" type="submit">Select</button>
+    </div>
+
+    {{ include(':common:default-person-list.html.twig') }}
+
+{% endblock %}

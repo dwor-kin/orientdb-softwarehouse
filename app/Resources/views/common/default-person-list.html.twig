@@ -1,0 +1,132 @@
+<script>
+    var executeAjaxRequest = function(route, rid) {
+
+        var data = {
+            "rid"  : rid
+        };
+
+        $.ajax({
+            type    : "POST",
+            url     : route,
+            data    : data,
+            error: function(response) {
+            },
+            success: function(response) {
+                var rd = response.response;
+
+                // personal data
+                $("#personal-data-name-surname").html(rd.userData.name + ' ' + rd.userData.surname);
+                $("#personal-data-gender").html(rd.userData.gender);
+                $("#personal-data-position").html(rd.userData.position);
+
+                // leader data
+                if (rd.leadInData.surname) {
+                    $("#leader-name").html(rd.leadInData.name + ' ' + rd.leadInData.surname);
+                }
+
+                // inferior
+                var inferiors = [];
+                for (var i = 0; i < rd.leadOutData.length; i++) {
+                    inferiors.push(rd.leadOutData[i].oData.name + ' ' + rd.leadOutData[i].oData.surname);
+                }
+
+                $("#inferior").html(inferiors.join());
+
+                // office
+                $("#office").html(rd.officeData.city);
+
+                // projects
+                var projects = [];
+                for (var i = 0; i < rd.projectData.length; i++) {
+                    projects.push(rd.projectData[i].oData.name);
+                }
+
+                $("#projects").html(projects.join());
+
+                // technology
+                var technology = [];
+                for (var i = 0; i < rd.technologyData.length; i++) {
+                    technology.push(rd.technologyData[i].oData.type);
+                }
+                $("#technology").html(technology.join());
+
+                $('#myModal').modal('toggle');
+                $('#myModal').modal('show');
+            }
+        });
+    };
+
+    var getPersonDetailData = function(rid) {
+        var route = Routing.generate('main:get-person-info');
+        executeAjaxRequest(route, rid);
+    }
+</script>
+
+<table class="table table-striped">
+    <thead class="thead-dark">
+    <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Surname</th>
+        <th>Position</th>
+        <th>Gender</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for record in response %}
+        <tr>
+            <th scope="row">{{ loop.index }}</th>
+            <td>{{ record.oData.name }}</td>
+            <td>{{ record.oData.surname }}</td>
+            <td>{{ record.oData.position }}</td>
+            <td>{{ record.oData.gender }}</td>
+            <td><button type="button" class="btn btn-info btn-xs" data-target="#myModal" onclick="getPersonDetailData('{{ record.oData.rid }}')">Show details</button></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Personal info</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <div class="grid">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12"><div id="personal-data-name-surname"></div></div>
+                            <div class="col-lg-6 col-md-6 col-sm-5 col-xs-12">Gender:<div id="personal-data-gender"></div></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">Position: <div id="personal-data-position"></div></div>
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Type</th>
+                            <th>Content</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Leader Name</td><td id="leader-name"></td></tr>
+                        <tr><td>Inferior</td><td id="inferior"></td></tr>
+                        <tr><td>Office</td><td id="office"></td></tr>
+                        <tr><td>Projects</td><td id="projects"></td></tr>
+                        <tr><td>Technology</td><td id="technology"></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

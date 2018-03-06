@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div id="wrapper">
+        <div id="container">
+            <p class="color-red">Assign to project</p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="sel1">Select project</label>
+        <form action="{{ url('report:assign-to-project') }}" method="post">
+            <select class="form-control" name="projectId">
+                {% for project in projects %}
+                    <option value="{{ project.oData.rid }}" {% if selected == project.oData.rid %} selected {% endif %}>{{ project.oData.name }} - {{ project.oData.description }}</option>
+                {% endfor %}
+            </select><button class="btn btn-primary" type="submit">Select</button>
+    </div>
+
+    {{ include(':common:default-person-list.html.twig') }}
+
+{% endblock %}

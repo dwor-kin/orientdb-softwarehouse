@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div id="wrapper">
+        <div id="container">
+            <p class="color-red">Leading by</p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="sel1">Select leader/head</label>
+        <form action="{{ url('report:leading-by') }}" method="post">
+        <select class="form-control" name="rid">
+            {% for leader in leaders %}
+                <option value="{{ leader.oData.rid }}" {% if selected == leader.oData.rid %} selected {% endif %}>{{ leader.oData.surname }} {{ leader.oData.name }}</option>
+            {% endfor %}
+        </select>
+        <button class="btn btn-primary" type="submit">Select</button>
+    </div>
+
+    {{ include(':common:default-person-list.html.twig') }}
+
+{% endblock %}

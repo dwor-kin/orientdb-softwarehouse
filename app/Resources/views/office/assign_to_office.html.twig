@@ -1,0 +1,120 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <script>
+        var assignToProject = function(personRid, projectRid) {
+            var route = Routing.generate('main:get-person-info');
+            var data = {
+                "rid"           : personRid,
+                "projectRid"   : projectRid
+            };
+
+            $.ajax({
+                type: "POST",
+                url: route,
+                data: data,
+                error: function (response) {
+                },
+                success: function (response) {
+                }
+            });
+        };
+
+        var removeFromProject = function(personRid, projectRid) {
+            var route = Routing.generate('main:get-person-info');
+            var data = {
+                "rid"           : personRid,
+                "projectRid"   : projectRid
+            };
+
+            $.ajax({
+                type: "POST",
+                url: route,
+                data: data,
+                error: function (response) {
+                },
+                success: function (response) {
+                }
+            });
+        };
+
+    </script>
+
+    <div id="wrapper">
+        <div id="container">
+            <p class="color-red">Assign to project</p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="sel1">Select project</label>
+        <form action="{{ url('project:get-projects') }}" method="post">
+            <select class="form-control" name="projectId">
+                {% for project in projects %}
+                    <option value="{{ project.oData.rid }}" {% if selected == project.oData.rid %} selected {% endif %}>{{ project.oData.name }} - {{ project.oData.description }}</option>
+                {% endfor %}
+            </select><button class="btn btn-primary" type="submit">Select</button>
+    </div>
+
+    {% if selected %}
+        <hr>
+        <div class="row">
+            <div class="col-sm-6">
+                <h3>People in project</h3>
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Surname</th>
+                        <th>Position</th>
+                        <th>Office</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for person in peopleInProject %}
+                        <tr>
+                            <th scope="row">{{ loop.index }}</th>
+                            <td>{{ person.oData.name }}</td>
+                            <td>{{ person.oData.surname }}</td>
+                            <td>{{ person.oData.position }}</td>
+                            <td>{{ person.oData.city|join(',') }}</td>
+                            <td><button type="button" class="btn btn-info btn-xs" data-target="#myModal" onclick="removeFromProject('{{person.oData.rid}}', '{{selected}}')">Remove from project</button></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-6">
+                <h3>People ready to assgin</h3>
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Surname</th>
+                        <th>Position</th>
+                        <th>Office</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for person in peopleToProject %}
+                        <tr>
+                            <th scope="row">{{ loop.index }}</th>
+                            <td>{{ person.oData.name }}</td>
+                            <td>{{ person.oData.surname }}</td>
+                            <td>{{ person.oData.position }}</td>
+                            <td>{{ person.oData.city|join(',') }}</td>
+                            <td><button type="button" class="btn btn-info btn-xs" data-target="#myModal" onclick="assignToProject('{{person.oData.rid}}', '{{selected}}')">Assign from project</button></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}

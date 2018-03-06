@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div id="wrapper">
+        <div id="container">
+            <p class="color-red">Unemployed</p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="sel1">Select office (city)</label>
+        <form action="{{ url('report:unemployed') }}" method="post">
+            <select class="form-control" name="cityId">
+                {% for office in offices %}
+                    <option value="{{ office.oData.rid }}" {% if selected == office.oData.rid %} selected {% endif %}>{{ office.oData.city }}</option>
+                {% endfor %}
+            </select><button class="btn btn-primary" type="submit">Select</button>
+    </div>
+
+    {{ include(':common:default-person-list.html.twig') }}
+{% endblock %}

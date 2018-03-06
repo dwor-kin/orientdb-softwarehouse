@@ -1,0 +1,170 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <script>
+
+        var getPerson = function(id) {
+
+        };
+
+        var getFormDetails = function() {
+            console.log('test');
+
+            var route = Routing.generate('main:software-house:details');
+            $.ajax({
+                type    : "GET",
+                url     : route,
+                error: function(response) {
+                    console.log('error');
+                },
+                success: function(response) {
+                    var rd = response.response;
+
+                    for (var i = 0; i < rd.office.length; i++) {
+                        $('#office').append($('<option>', {
+                            value   : rd.office[i].oData.rid,
+                            text    : rd.office[i].oData.city
+                        }));
+                    }
+
+                    for (var i = 0; i < rd.technology.length; i++) {
+                        $('#technology').append($('<option>', {
+                            value   : rd.technology[i].oData.rid,
+                            text    : rd.technology[i].oData.type
+                        }));
+                    }
+
+                    $('#personModal').modal('toggle');
+                    $('#personModal').modal('show');
+                }
+            });
+        };
+
+        var savePerson = function() {
+            var data = {
+                'name'          : $('#name').val(),
+                'surname'       : $('#surname').val(),
+                'gender'        : $('#gender').val(),
+                'position'      : $('#position').val(),
+                'office'        : $('#office').val(),
+                'technology'    : $('#technology').val()
+            };
+
+            var route = Routing.generate('person:set-record');
+
+            $.ajax({
+                type    : "POST",
+                url     : route,
+                data    : data,
+                error: function(response) {
+                    console.log('error');
+                },
+                success: function(response) {
+                    $('#personModal').modal('toggle');
+                    location.reload();
+                }
+            });
+        };
+
+        var deletePerson = function() {
+
+        };
+
+        var editPerson = function() {
+        };
+
+        var createPerson = function() {
+            getFormDetails();
+        }
+
+    </script>
+
+    <div id="personModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Personal info</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" class="form-control" id="name" aria-describedby="nameHelp" placeholder="Enter name">
+                        </div>
+                        <div class="form-group">
+                            <label for="surname">Surname</label>
+                            <input type="text" class="form-control" id="surname" aria-describedby="surnameHelp" placeholder="Enter surname">
+                        </div>
+                        <div class="form-group">
+                            <label for="position">Position</label>
+                            <select class="form-control" id="position" aria-describedby="positionHelp">
+                                <option value="Head">Head</option>
+                                <option value="Team Leader">Team Leader</option>
+                                <option value="Developer">Developer</option>
+                                <option value="UX">UX</option>
+                                <option value="Tester">Tester</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <select class="form-control" id="gender" aria-describedby="genderHelp">
+                                <option value="M">Male</option>
+                                <option value="F">Female</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="office">Assign to office</label>
+                            <select class="form-control" id="office" aria-describedby="officeHelp">
+                                <option value="">-</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="technology">Assign to technology</label>
+                            <select class="form-control" id="technology" name="technology[]" aria-describedby="technologyHelp" multiple>
+                            </select>
+                            <small id="technologyHelp" class="form-text text-muted">Du kan göra det senare</small>
+                        </div>
+                        <button type="button" class="btn btn-default" onclick="savePerson()">Submit</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button type="button" class="btn btn-info btn-xs" data-target="#personModal" onclick="createPerson()">Add new person</button>
+
+    <table class="table table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Position</th>
+            <th>Gender</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for record in response %}
+            <tr>
+                <th scope="row">{{ loop.index }}</th>
+                <td>{{ record.oData.name }}</td>
+                <td>{{ record.oData.surname }}</td>
+                <td>{{ record.oData.position }}</td>
+                <td>{{ record.oData.gender }}</td>
+                <td>
+                    <button type="button" class="btn btn-info btn-xs" data-target="#personModal" onclick="">Edit</button>
+                    <button type="button" class="btn btn-info btn-xs" data-target="#deleteModal" onclick="">Delete</button>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

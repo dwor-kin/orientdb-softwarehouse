@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div id="wrapper">
+        <div id="container">
+            <p class="color-red">Leading by Head</p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="sel1">Select head of the Office</label>
+        <form action="{{ url('report:lead-by-head') }}" method="post">
+            <select class="form-control" name="rid">
+                {% for header in headers %}
+                    <option value="{{ header.oData.rid }}" {% if selected == header.oData.rid %} selected {% endif %}>{{ header.oData.surname }} {{ header.oData.name }}</option>
+                {% endfor %}
+            </select><button class="btn btn-primary" type="submit">Select</button>
+    </div>
+
+    {{ include(':common:default-person-list.html.twig') }}
+
+{% endblock %}
